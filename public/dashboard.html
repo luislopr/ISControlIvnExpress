@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>¿Que quieres hacer?</h1>
+        
+        <div styles="max-width: 50%">
+            <a href="./inventario/inventario.html">
+                <button class="btn">Inventario Actual</button>
+            </a> 
+            <a href="buy.html">
+                <button class="btn">Comprar ingredientes</button>
+            </a>
+            <button class="btn">Pedidos actuales</button>
+            <button class="btn">Ventas y Pagos</button>
+            <button class="btn">Reportes de errores</button>
+            </div>
+
+            <button class="btn" onclick="toggleDropdown('exercise-dropdown')">Control de accesos</button>
+            <div id="exercise-dropdown" class="dropdown-content">
+                <button class="sub-btn">Usuarios actuales</button>
+                <button class="sub-btn">Actividad reciente</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 InvenPizza. Todos los derechos reservados.</p>
+        <p>Contacto: info@InvenPizza.com</p>
+    </footer>
+    <script src="scripts.js"></script>
+</body>
+</html>
