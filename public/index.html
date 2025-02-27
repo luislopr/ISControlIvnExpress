@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pizza Inventarios</title>
     <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
     <div class="container">
         <h1 id="title">Inven Pizza</h1>
@@ -20,6 +22,13 @@
             <span class="close" onclick="hideModal()">&times;</span>
             <h3 id="modal-title"></h3>
             <form id="modal-form" method="post" action="">
+                <div id="register-fields">
+                    <label for="nombre_completo">Nombre Completo:</label>
+                    <input type="text" id="nombre_completo" name="nombre_completo" required>
+                    <label for="email">E-Mail:</label>
+                    <input type="text" id="email" name="email" required>
+                </div>
+
                 <label for="username">Usuario:</label>
                 <input type="text" id="username" name="username" required>
                 <label for="password">Contraseña:</label>
@@ -35,4 +44,5 @@
     </footer>
     <script src="scripts.js"></script>
 </body>
+
 </html>

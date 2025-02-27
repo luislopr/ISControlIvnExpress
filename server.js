@@ -12,7 +12,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // Servir archivos estáticos desde la carpeta 'public'
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Crear tabla de usuarios
 // Crear tablas
 db.serialize(() => {
     db.run(`CREATE TABLE proveedores (
@@ -79,16 +78,16 @@ db.serialize(() => {
     )`);
 
     db.run(`CREATE TABLE usuarios (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        login TEXT NOT NULL UNIQUE,
+        username TEXT NOT NULL UNIQUE,
         email TEXT NOT NULL UNIQUE,
         nombre_completo TEXT NOT NULL,
-        contraseña TEXT NOT NULL,
+        password TEXT NOT NULL,
         fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
         role_id INTEGER DEFAULT 1 NOT NULL,
-        estado INTEGER DEFAULT 1 NOT NULL,
-        FOREIGN KEY (role_id) REFERENCES roles(id)
-    )`);
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        estado INTEGER DEFAULT 1 NOT NULL
+        )`);
+//        FOREIGN KEY (role_id) REFERENCES roles(id)
 
     db.run(`CREATE TABLE ventas (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -107,12 +106,18 @@ db.serialize(() => {
 
 // Registrar usuario
 app.post('/register', (req, res) => {
-    const { username, password } = req.body;
+    const { username, password, nombre_completo, email } = req.body;
     const hashedPassword = bcrypt.hashSync(password, 10);
-    const stmt = db.prepare(`INSERT INTO usuarios (username, password) VALUES (?, ?)`);
-    stmt.run(username, hashedPassword, (err) => {
+    const stmt = db.prepare(`INSERT INTO usuarios 
+        (username, password, nombre_completo, email, role_id, estado) 
+        VALUES (?, ?, ?, ?, ?, ?)`);
+    stmt.run(username, hashedPassword, nombre_completo, email, 1, 1, (err) => {
         if (err) {
-            return res.status(400).json({ message: 'Usuario ya existe' });
+            // Manejo de errores, como usuario ya existente
+            if (err.message.includes('UNIQUE constraint failed')) {
+                return res.status(400).json({ message: 'El usuario o el email ya existen' });
+            }
+            return res.status(500).json({ message: 'Error al registrar el usuario' });
         }
         res.status(200).json({ message: 'Usuario registrado' });
     });
@@ -132,6 +137,20 @@ app.post('/login', (req, res) => {
             return res.status(400).json({ message: 'Contraseña incorrecta' });
         }
     });
+});
+
+
+// Ruta para insertar un proveedor
+app.post('/api/proveedores', (req, res) => {
+    const { rif, nombre, telefono, email, direccion, dias_credito, dias_promedio_entrega } = req.body;
+    db.run(`INSERT INTO proveedores (rif, nombre, telefono, email, direccion, dias_credito, dias_promedio_entrega) VALUES (?, ?, ?, ?, ?, ?, ?)`, 
+        [rif, nombre, telefono, email, direccion, dias_credito, dias_promedio_entrega], 
+        function(err) {
+            if (err) {
+                return res.status(500).send(err.message);
+            }
+            res.status(201).send({ id: this.lastID });
+        });
 });
 
 app.listen(3000, () => {
