@@ -79,33 +79,3 @@ document.addEventListener('click', function(event) {
 function openCalorieForm() {
     window.open('calorie_form.html', 'CalorieForm', 'width=400,height=400');
 }
-
-
-document.getElementById('proveedorForm').addEventListener('submit', function(event) {
-    event.preventDefault(); // Evita que el formulario se envíe de la manera tradicional
-
-    const formData = new FormData(this);
-    const data = Object.fromEntries(formData.entries());
-
-    fetch('/api/proveedores', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Error en la inserción');
-        }
-        return response.json();
-    })
-    .then(data => {
-        alert('Proveedor insertado con ID: ' + data.id);
-        this.reset(); // Reinicia el formulario
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('Error al insertar el proveedor');
-    });
-});

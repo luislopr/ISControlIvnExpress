@@ -143,14 +143,30 @@ app.post('/login', (req, res) => {
 // Ruta para insertar un proveedor
 app.post('/api/proveedores', (req, res) => {
     const { rif, nombre, telefono, email, direccion, dias_credito, dias_promedio_entrega } = req.body;
-    db.run(`INSERT INTO proveedores (rif, nombre, telefono, email, direccion, dias_credito, dias_promedio_entrega) VALUES (?, ?, ?, ?, ?, ?, ?)`, 
-        [rif, nombre, telefono, email, direccion, dias_credito, dias_promedio_entrega], 
-        function(err) {
+    const stmt = db.prepare(`INSERT INTO proveedores (rif, nombre, telefono, email, direccion, dias_credito, dias_promedio_entrega) VALUES (?, ?, ?, ?, ?, ?, ?)`);
+        stmt.run(rif, nombre, telefono, email, direccion, dias_credito, dias_promedio_entrega, (err) => {
             if (err) {
-                return res.status(500).send(err.message);
+                // Manejo de errores, como usuario ya existente
+                if (err.message.includes('UNIQUE constraint failed')) {
+                    return res.status(400).json({ message: 'El Proveedor ya existe' });
+                }
+                return res.status(500).json({ message: 'Error al registrar el Proveedor' });
             }
-            res.status(201).send({ id: this.lastID });
+            res.status(200).json({ message: 'Proveedor registrado' });
         });
+        stmt.finalize();
+});
+
+// Ruta para listar proveedores
+app.get('/api/proveedores', (req, res) => {
+    const stmt = db.prepare(`SELECT * FROM proveedores`);
+    stmt.all((err, rows) => {
+        if (err) {
+            return res.status(500).json({ message: 'Error al obtener los proveedores' });
+        }
+        res.status(200).json(rows); // Devuelve la lista de proveedores
+    });
+    stmt.finalize();
 });
 
 app.listen(3000, () => {

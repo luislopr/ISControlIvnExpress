@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proveedores</title>
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1 id="title">Gestion de Pedidos</h1>
+        <h2>Administra tus proveedores de manera eficiente</h2>
+        <div class="buttons">
+            <button class="btn" onclick="listProviders()">Seleccionar Proveedor</button>
+            <button class="btn" onclick="listArticles()">Seleccionar Artículo</button>
+            <!-- input de cantidad para cada artículo.. -->
+            <!-- falta registrar los artículos.. -->
+            <!-- guardar el pedido con un estado de creado/pediente -->
+             <!-- configuraciones de restock automatico con reorder point 
+                apoyado por el dia medio de entrega del proveedor y/o
+                el movimiento promedio diario del artículo -->
+            <a href="../dashboard.html">
+                <button class="btn">Volver al Dashboard</button>
+            </a>
+        </div>
+
+        <div id="lista-proveedores-container" style="display: none;">
+            <h3>Lista de Proveedores</h3>
+            <ul id="lista-proveedores"></ul>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 InvenPizza. Todos los derechos reservados.</p>
+        <p>Contacto: info@InvenPizza.com</p>
+    </footer>
+    <script src="scripts.js"></script>
+</body>
+</html>
